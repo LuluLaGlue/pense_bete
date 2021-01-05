@@ -128,16 +128,18 @@ export default function Home() {
 
             <div className={classes.paper}>
 
-                {data ?
 
-                    <Paper elevation={3} style={{ width: "100%" }}>
-                        <div className={classes.form}>
 
-                            <br />
-                            <Fab size='small' variant="round" color="primary" onClick={() => window.location.href = "/new"}><AddIcon size=' small' /></Fab>
-                            <br /><br />
+                <Paper elevation={3} style={{ width: "100%" }}>
+                    <div className={classes.form}>
 
-                            {data.map((value, index) => {
+                        <br />
+                        <Fab size='small' variant="round" color="primary" onClick={() => window.location.href = "/new"}><AddIcon size=' small' /></Fab>
+                        <br /><br />
+                        {data ?
+
+
+                            data.map((value, index) => {
 
                                 return (
                                     <Accordion>
@@ -179,12 +181,12 @@ export default function Home() {
 
                                     </Accordion>
                                 )
-                            })}
+                            })
+                            : null}
+                    </div>
 
-                        </div>
+                </Paper>
 
-                    </Paper>
-                    : null}
 
             </div>
 
