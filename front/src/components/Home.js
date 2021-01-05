@@ -1,6 +1,7 @@
+/* eslint-disable */
 import React from 'react';
 import Container from '@material-ui/core/Container';
-import { Button, Fab, Paper, Typography } from '@material-ui/core';
+import { Fab, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import Accordion from '@material-ui/core/Accordion';
@@ -47,13 +48,27 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
     const classes = useStyles();
     const [data, setData] = React.useState(null);
-    const [reset, setReset] = React.useState(false);
+    const [allFin, setAllFin] = React.useState(null);
+    const [allCours, setAllCours] = React.useState(null);
 
     const getData = async () => {
         const tmp = data ? undefined : await axios.get(config.url + config.port + '/data/all')
             .catch(err => console.log(err))
         if (tmp && tmp.data && tmp.data.length > 0) {
-            setData(tmp.data.sort((a, b) => { return parseInt(a.creation) - parseInt(b.creation) }));
+            // tmp.data = tmp.data.sort((a, b) => { return parseInt(a.creation) - parseInt(b.creation) })
+            var tmp_finished = [];
+            var tmp_cours = []
+            tmp.data.map((value, index) => {
+                if (value.finished !== "") {
+                    tmp_finished.push(value);
+                } else {
+                    tmp_cours.push(value)
+                }
+                return value;
+            })
+            tmp_finished.sort((a, b) => { return parseInt(b.finished) - parseInt(a.finished) });
+            tmp_cours.sort((a, b) => { return parseInt(a.creation) - parseInt(b.creation) });
+            setData(tmp_cours.concat(tmp_finished))
         }
     }
 
@@ -87,6 +102,8 @@ export default function Home() {
         var day = new Date(date).getDate();
         var month = new Date(date).getMonth() + 1;
         var year = new Date(date).getFullYear();
+        var hour = new Date(date).getHours();
+        var minute = new Date(date).getMinutes();
 
         if (day < 10) {
             day = "0" + day;
@@ -94,26 +111,34 @@ export default function Home() {
         if (month < 10) {
             month = "0" + month;
         }
+        if (hour < 10) {
+            hour = "0" + hour
+        }
+        if (minute < 10) {
+            minute = "0" + minute
+        }
 
-        return day + "/" + month + "/" + year
+        return day + "/" + month + "/" + year + " " + hour + ':' + minute
     }
 
     let tmp = data ? null : getData();
 
     return (
         <Container component="main" maxWidth="md">
+
             <div className={classes.paper}>
+
                 {data ?
+
                     <Paper elevation={3} style={{ width: "100%" }}>
                         <div className={classes.form}>
+
                             <br />
-                            <Fab size='small' variant="outlined" color="primary" onClick={() => window.location.href = "/new"}><AddIcon size=' small' /></Fab>
+                            <Fab size='small' variant="round" color="primary" onClick={() => window.location.href = "/new"}><AddIcon size=' small' /></Fab>
                             <br /><br />
+
                             {data.map((value, index) => {
-                                console.log(value)
-                                // if (value.finished !== "") {
-                                //     setReset(true)
-                                // }
+
                                 return (
                                     <Accordion>
 
@@ -124,24 +149,30 @@ export default function Home() {
                                         >
 
                                             <Typography className={classes.heading} style={{ textDecoration: value.finished !== "" ? 'line-through' : "", color: value.finished !== "" ? "#00e676" : "" }}>{value.title}</Typography>
-                                            <Typography className={classes.heading}>&nbsp;{value.finished !== "" ? " -  " + parseDate(value.finished * 1) : ""}</Typography>
+                                            <Typography className={classes.heading}>&nbsp;{value.finished !== "" ? parseDate(value.creation * 1) + "  -  " + parseDate(value.finished * 1) : " -  " + parseDate(value.creation * 1)}</Typography>
 
                                         </AccordionSummary>
 
                                         <AccordionDetails>
 
                                             <div style={{ textAlign: 'left' }}>
+
                                                 <Typography className={classes.heading}>Category: {value.category}</Typography><br />
                                                 <Typography className={classes.heading}>Description: {value.description}</Typography><br />
                                                 <br />
+
                                                 {value.finished === "" ?
-                                                    <Fab size='small' variant="outlined" color="secondary" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => finish(value.id, value.finished)}><DoneIcon size=' small' /></Fab>
+
+                                                    <Fab size='small' variant="round" color="secondary" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => finish(value.id, value.finished)}><DoneIcon size=' small' /></Fab>
                                                     :
-                                                    <Fab size='small' variant="outlined" color="secondary" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => finish(value.id)}><RestoreIcon size=' small' /></Fab>
-                                                }&nbsp;
-                                                <Fab size='small' variant="outlined" color="primary" onClick={() => window.location.href = "/edit/" + value.id}><EditIcon size='small' /></Fab>
+                                                    <Fab size='small' variant="round" color="secondary" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => finish(value.id)}><RestoreIcon size=' small' /></Fab>
+                                                }
+
                                                 &nbsp;
-                                                <Fab size='small' variant="outlined" color="secondary" onClick={() => del(value.id)}><DeleteForeverIcon size=' small' /></Fab>
+                                                <Fab size='small' variant="round" color="primary" onClick={() => window.location.href = "/edit/" + value.id}><EditIcon size='small' /></Fab>
+                                                &nbsp;
+                                                <Fab size='small' variant="round" color="secondary" onClick={() => del(value.id)}><DeleteForeverIcon size=' small' /></Fab>
+
                                             </div>
 
                                         </AccordionDetails>
@@ -149,10 +180,14 @@ export default function Home() {
                                     </Accordion>
                                 )
                             })}
+
                         </div>
+
                     </Paper>
                     : null}
+
             </div>
+
         </Container>
     )
 }

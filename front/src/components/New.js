@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -113,7 +114,7 @@ export default function New() {
                             name="desc"
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                        <br />
+                        <br /><br />
                         <Accordion>
 
                             <AccordionSummary
@@ -170,7 +171,7 @@ export default function New() {
 
                         </Accordion>
                         <br />
-                        <Button variant="outlined" onClick={() => create()}><SendIcon />&nbsp;Créer</Button>
+                        <Button variant="outlined" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => create()}><SendIcon />&nbsp;Create</Button>
                     </div>
 
                 </Paper>

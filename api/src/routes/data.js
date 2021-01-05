@@ -58,7 +58,7 @@ router.post('/', (req, res) => {
 
     try {
         writer.pipe(fs.createWriteStream(csv_file, { flags: 'a' }))
-        writer.write([id, req.body.creation, req.body.finished || "", req.body.title, req.body.description || "", req.body.category || ""])
+        writer.write([id, req.body.creation, req.body.finished || "", req.body.title, req.body.description || "", req.body.category || "other"])
         writer.end();
         return res.status(200).json({ message: "Data created", id: id })
     } catch (e) {

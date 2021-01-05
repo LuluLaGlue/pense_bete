@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -78,7 +79,7 @@ export default function Edit() {
         axios.put(config.url + config.port + '/data/' + id, obj)
             .then(res => {
                 if (res.status === 200) {
-                    alert("Data created")
+                    alert("Data updated")
                     window.location.href = "/home"
                 }
             })
@@ -126,7 +127,7 @@ export default function Edit() {
                             name="desc"
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                        <br />
+                        <br /><br />
                         <Accordion>
 
                             <AccordionSummary
@@ -183,7 +184,7 @@ export default function Edit() {
 
                         </Accordion>
                         <br />
-                        <Button variant="outlined" onClick={() => edit()}><SendIcon />&nbsp;Créer</Button>
+                        <Button variant="outlined" style={{ backgroundColor: "#00e676", color: 'white' }} onClick={() => edit()}><SendIcon />&nbsp;Update</Button>
                     </div>
 
                 </Paper>

@@ -22,6 +22,7 @@ function App() {
           }
         },
       }),
+    // eslint-disable-next-line
     [true],
   );
   return (
