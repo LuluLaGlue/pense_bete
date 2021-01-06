@@ -1,6 +1,6 @@
 const config = {
     url: "http://localhost:",
-    port: 3000
+    port: 8502
 }
 
 export default config
