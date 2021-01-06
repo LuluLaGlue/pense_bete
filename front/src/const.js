@@ -1,6 +1,6 @@
 const config = {
-    url: "https://api-pense-bete.herokuapp.com",
-    port: ''
+    url: "http://localhost:",
+    port: 3000
 }
 
 export default config
